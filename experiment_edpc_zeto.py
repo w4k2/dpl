@@ -99,3 +99,6 @@ for iter in range(n_iters):
     
     plt.savefig('frames/%04i.png' % model.epoch)
     system('cp frames/%04i.png frames/last.png' % model.epoch)
+    
+    for aa in ax[1:].ravel():
+        aa.cla()
