@@ -8,9 +8,9 @@ ENTROPY_MODES = ['inner', 'outer', 'both', 'none']
 DEFAULT_MODEL = MLPRegressor(hidden_layer_sizes=(100,100,100),
                              learning_rate_init=1e-1,)
 
-class EDPC(ClassifierMixin, BaseEstimator):
+class DPL(ClassifierMixin, BaseEstimator):
     """
-    EDPC – Entropy Distance Profile Classifier
+    DPL – Distance Profile Layer
     """
     def __init__(self, 
                  base_clf=DEFAULT_MODEL, 

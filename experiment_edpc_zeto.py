@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from methods import EDPC
+from methods import DPL
 from utils import zeto, ns2pdf
 from sklearn.neural_network import MLPRegressor
 from os import system
@@ -25,8 +25,8 @@ zpdf = np.product(ns2pdf(prober, ns), axis=1)
 
 cc = {'curve_quants': 16}
 models = {
-    'monotonic': EDPC(s_reg, **cc, monotonic=True),
-    'dychotomic': EDPC(m_reg, **cc, monotonic=False)
+    'monotonic': DPL(s_reg, **cc, monotonic=True),
+    'dychotomic': DPL(m_reg, **cc, monotonic=False)
 }
 
 # Prepare plot
