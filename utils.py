@@ -56,7 +56,7 @@ def snakeway(n_samples=1000, factor=3,
     
     norms = [norm(centroid+translation, 1/std) for centroid in centroids]
     signs = [1 if i%2 == 0 else -1 for i in range(n_centroids)]
-    print(norms, signs)
+    # print(norms, signs)
     
     X = np.concatenate([np.random.normal(centroid, sigma/std, size=c_samples) 
                         for centroid in centroids])
