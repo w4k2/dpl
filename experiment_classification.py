@@ -35,7 +35,7 @@ exp = False
 #####
 if exp == True:
 
-    n_clf = 6
+    n_clf = 7
     splits = 5
     res = np.zeros((len(datasets), splits, n_clf))
 
@@ -53,11 +53,13 @@ if exp == True:
                 KNeighborsClassifier(),
                 MLPClassifier(hidden_layer_sizes=(100,10), random_state=2331),
                 DPL(base_clf=clone(base_reg), curve_quants=10,
-                    monotonic=False, max_iter=25, norm='sqrt'),
+                    monotonic=False, max_iter=25, transform='none'),
+                DPL(base_clf=clone(base_reg), curve_quants=10,
+                    monotonic=False, max_iter=25, transform='sqrt'),
                 DPL(base_clf=clone(base_reg), curve_quants=10, 
-                    monotonic=False, max_iter=25, norm='log'),
+                    monotonic=False, max_iter=25, transform='log'),
                 DPL(base_clf=clone(base_reg), curve_quants=10, 
-                    monotonic=False, max_iter=25, norm='norm'),
+                    monotonic=False, max_iter=25, transform='std_norm'),
             ]
             
             for clf_id, clf in enumerate(classifiers):
@@ -75,18 +77,18 @@ else:
     res = np.load('results/res_syn.npy')
     print(res.shape) # datasets x folds x clfs
     
-    labels = ['GNB', 'KNN', 'MLP', 'DPL-sqrt', 'DPL-log', 'DPL-norm']
-    cols = ['b','b','b','r','r','r']
-    markers = ['o','x','*','s','d','*']
+    labels = ['GNB', 'KNN', 'MLP', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+    cols = ['b','b','b','r','r','r','r']
+    markers = ['o','x','*','s','d','*','o']
     
     res_mean = np.mean(res, axis=1)
     
     fig, ax = plt.subplots(2,1,figsize=(10,8), sharex=True)
     ax[0].imshow(res_mean.T, cmap='coolwarm')
     
-    ax[0].set_yticks(np.arange(6), labels)
+    ax[0].set_yticks(np.arange(7), labels)
     
-    for clf_id in range(6):
+    for clf_id in range(7):
         ax[1].scatter(np.arange(len(datasets)), res_mean[:,clf_id], 
                       label=labels[clf_id], marker=markers[clf_id], color=cols[clf_id],
                       alpha=0.7)
