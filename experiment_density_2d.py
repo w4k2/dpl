@@ -1,13 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import snakeway, ns2pdf
+from scipy.stats import f_oneway
+from utils import ns2pdf, zeto
 from sklearn.neural_network import MLPRegressor
 from methods import DPL
 from sklearn.base import clone
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.neighbors import KernelDensity
-from scipy.stats import f_oneway
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-
 
 def norm_0_1(data):
     data -=np.nanmin(data)
@@ -15,17 +14,20 @@ def norm_0_1(data):
     return data
 
 datasets = {
-    's3_0': snakeway(n_samples=2000, n_centroids=3),
-    's5_0': snakeway(n_samples=2000, n_centroids=5),
-    's7_0': snakeway(n_samples=2000, n_centroids=7),
-    's9_0': snakeway(n_samples=2000, n_centroids=9),
-    's3_2': snakeway(n_samples=2000, n_centroids=3, factor=2),
-    's5_2': snakeway(n_samples=2000, n_centroids=5, factor=2),
-    's7_2': snakeway(n_samples=2000, n_centroids=7, factor=2),
-    's9_2': snakeway(n_samples=2000, n_centroids=9, factor=2),
+    'z3_0': zeto(n_samples=2000, m_centroids=3),
+    'z5_0': zeto(n_samples=2000, m_centroids=5),
+    'z7_0': zeto(n_samples=2000, m_centroids=7),
+    'z9_0': zeto(n_samples=2000, m_centroids=9),
+    'z3_2': zeto(n_samples=2000, m_centroids=3, factor=2),
+    'z5_2': zeto(n_samples=2000, m_centroids=5, factor=2),
+    'z7_2': zeto(n_samples=2000, m_centroids=7, factor=2),
+    'z9_2': zeto(n_samples=2000, m_centroids=9, factor=2)
 }
 
 exp = False
+
+pred_space = np.linspace(-5, 5, 100).reshape(-1, 1)
+pred_mesh = np.array(np.meshgrid(pred_space, pred_space)).reshape(2,-1).T
 
 #####
 if exp == True:
@@ -35,15 +37,13 @@ if exp == True:
     res = np.zeros((len(datasets), n_est, iters, 4)) # (stat, p, mse, mae)
 
     base_reg = MLPRegressor(hidden_layer_sizes=(100, 10), random_state=2333)
-    pred_space_small = np.linspace(-5, 5, 1000).reshape(-1, 1)
-
 
     for i, (d_name, (X, y, ns)) in enumerate(datasets.items()):
         print(d_name)
         
         # get actual density
         new_s = np.ones_like(ns[1])
-        spdf = ns2pdf(pred_space_small, (ns[0], new_s)).flatten()
+        zpdf = np.product(ns2pdf(pred_mesh, (ns[0], new_s)), axis=1)
                 
         # test estimated density
 
@@ -67,27 +67,26 @@ if exp == True:
             if est_id<3:
                 # KDE
                 est.fit(X, y)
-                pred = est.score_samples(pred_space_small) # Compute the log-likelihood of each sample under the model
+                pred = est.score_samples(pred_mesh) # Compute the log-likelihood of each sample under the model
                 pred = np.exp(pred)
                 
                 # eval with anova
-                stat, p = f_oneway(pred, spdf)
+                stat, p = f_oneway(pred, zpdf)
                 res[i, est_id, :, 0] = stat
                 res[i, est_id, :, 1] = p
                 
                 # eval mse
-                n_spdf = norm_0_1(spdf)       
+                n_zpdf = norm_0_1(zpdf)       
                 n_pred = norm_0_1(pred)   
                 n_pred[np.isinf(n_pred)]=0
                 n_pred[np.isnan(n_pred)]=0
                                                     
-                res[i, est_id, -1, 2] = mean_squared_error(n_spdf, n_pred)
-                res[i, est_id, -1, 3] = mean_absolute_error(n_spdf, n_pred)
+                res[i, est_id, -1, 2] = mean_squared_error(n_zpdf, n_pred)
+                res[i, est_id, -1, 3] = mean_absolute_error(n_zpdf, n_pred)
                 
-                # fig, ax = plt.subplots(1,1,figsize=(8,5))
-                # ax2 = ax.twinx()
-                # ax.plot(pred_space_small, n_spdf)
-                # ax2.plot(pred_space_small, n_pred, color='r')
+                # fig, ax = plt.subplots(1,2,figsize=(11,5))
+                # ax[0].scatter(*pred_mesh.T, c=n_zpdf, cmap='coolwarm')
+                # ax[1].scatter(*pred_mesh.T, c=n_pred, cmap='coolwarm')
                 # plt.savefig('foo.png')
                 # plt.clf()
                 # exit()
@@ -97,38 +96,38 @@ if exp == True:
                 #DPL
                 for iter in range(iters):
                     est.partial_fit(X, y)                    
-                    pred = est.score_samples(pred_space_small)
+                    pred = est.score_samples(pred_mesh)
                     # exit()
                     
                     # eval with anova
-                    stat, p = f_oneway(pred, spdf)
+                    stat, p = f_oneway(pred, zpdf)
                     res[i, est_id, iter, 0] = stat
                     res[i, est_id, iter, 1] = p
                     
                     # eval mse
-                    n_spdf = norm_0_1(spdf)       
+                    n_zpdf = norm_0_1(zpdf)       
                     n_pred = norm_0_1(pred)   
                     n_pred[np.isinf(n_pred)]=0
                     n_pred[np.isnan(n_pred)]=0
                 
-                    res[i, est_id, iter, 2] = mean_squared_error(n_spdf, n_pred)
-                    res[i, est_id, iter, 3] = mean_absolute_error(n_spdf, n_pred)
+                    res[i, est_id, iter, 2] = mean_squared_error(n_zpdf, n_pred)
+                    res[i, est_id, iter, 3] = mean_absolute_error(n_zpdf, n_pred)
                     
-                    # fig, ax = plt.subplots(1,1,figsize=(8,5))
-                    # ax2 = ax.twinx()
-                    # ax.plot(n_spdf)
-                    # ax2.plot(n_pred, color='r')
-                    # plt.title('iter: %i, s=%0.3f, t=%0.3f' % (iter, stat, p))
+                    # fig, ax = plt.subplots(1,2,figsize=(11,5))
+                    # ax[0].scatter(*pred_mesh.T, c=n_zpdf, cmap='coolwarm')
+                    # ax[1].scatter(*pred_mesh.T, c=n_pred, cmap='coolwarm')
+                    # plt.suptitle(iter)
                     # plt.savefig('foo.png')
                     # plt.clf()
+                    # exit()
     
         print(d_name, res[i,:,-1, -1])
-        np.save('results/res_density_1d.npy', res)
+        np.save('results/res_density_2d.npy', res)
 
 else:
     
     #Plot
-    res = np.load('results/res_density_1d.npy')
+    res = np.load('results/res_density_2d.npy')
     print(res.shape) # datasets x estiators x iters x (stat, p, mse, mae)
         
     labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
@@ -147,8 +146,7 @@ else:
         ax[m].grid(ls=':')
         
     ax[0].legend(ncol=3, frameon=False)
-
         
     plt.tight_layout()
-    plt.savefig('figures/est_1d.png')  
+    plt.savefig('figures/est_2d.png')  
     
