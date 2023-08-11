@@ -35,6 +35,7 @@ if exp == True:
     n_est = 7
     iters = 400
     res = np.zeros((len(datasets), n_est, iters, 4)) # (stat, p, mse, mae)
+    res_pred = np.zeros((len(datasets), n_est+1, pred_mesh.shape[0]))
 
     base_reg = MLPRegressor(hidden_layer_sizes=(100, 10), random_state=2333)
 
@@ -44,7 +45,8 @@ if exp == True:
         # get actual density
         new_s = np.ones_like(ns[1])
         zpdf = np.product(ns2pdf(pred_mesh, (ns[0], new_s)), axis=1)
-                
+        res_pred[i, 0] = norm_0_1(zpdf)
+             
         # test estimated density
 
         estimators = [
@@ -84,14 +86,8 @@ if exp == True:
                 res[i, est_id, -1, 2] = mean_squared_error(n_zpdf, n_pred)
                 res[i, est_id, -1, 3] = mean_absolute_error(n_zpdf, n_pred)
                 
-                # fig, ax = plt.subplots(1,2,figsize=(11,5))
-                # ax[0].scatter(*pred_mesh.T, c=n_zpdf, cmap='coolwarm')
-                # ax[1].scatter(*pred_mesh.T, c=n_pred, cmap='coolwarm')
-                # plt.savefig('foo.png')
-                # plt.clf()
-                # exit()
-        
-                
+                res_pred[i, 1+est_id] = n_pred
+
             else:
                 #DPL
                 for iter in range(iters):
@@ -113,20 +109,16 @@ if exp == True:
                     res[i, est_id, iter, 2] = mean_squared_error(n_zpdf, n_pred)
                     res[i, est_id, iter, 3] = mean_absolute_error(n_zpdf, n_pred)
                     
-                    # fig, ax = plt.subplots(1,2,figsize=(11,5))
-                    # ax[0].scatter(*pred_mesh.T, c=n_zpdf, cmap='coolwarm')
-                    # ax[1].scatter(*pred_mesh.T, c=n_pred, cmap='coolwarm')
-                    # plt.suptitle(iter)
-                    # plt.savefig('foo.png')
-                    # plt.clf()
-                    # exit()
+                    if iter==iters-1:
+                        res_pred[i, 1+est_id] = n_pred
     
         print(d_name, res[i,:,-1, -1])
         np.save('results/res_density_2d.npy', res)
+        np.save('results/res_density_2d_v.npy', res_pred)
 
 else:
     
-    #Plot
+    #Plot error
     res = np.load('results/res_density_2d.npy')
     print(res.shape) # datasets x estiators x iters x (stat, p, mse, mae)
         
@@ -150,3 +142,23 @@ else:
     plt.tight_layout()
     plt.savefig('figures/est_2d.png')  
     
+    
+    # Plot imgs
+    labels = ['true', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+
+    res = np.load('results/res_density_2d_v.npy')
+    print(res.shape)
+    
+    fig, ax = plt.subplots(8,8,figsize=(20,20))
+    
+    for d_id, d_name in enumerate(datasets.keys()):
+        for est_id, est in enumerate(labels):
+            ax[d_id, est_id].scatter(*pred_mesh.T, c=res[d_id, est_id], cmap='coolwarm')
+            
+            if est_id==0:
+                ax[d_id, est_id].set_ylabel(d_name)
+            if d_id==0:
+                ax[d_id, est_id].set_title(est)
+                
+    plt.tight_layout()
+    plt.savefig('figures/imgs_2d.png')
