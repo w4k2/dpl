@@ -41,7 +41,6 @@ base_regressors = [
     MLPRegressor(hidden_layer_sizes=(10, 10), random_state=1432),
     MLPRegressor(hidden_layer_sizes=(100, 100), random_state=1432),
     MLPRegressor(hidden_layer_sizes=(10, 10, 10), random_state=1432),
-    MLPRegressor(hidden_layer_sizes=(100, 100, 100), random_state=1432)
 ]
 transforms = ['none', 'sqrt', 'log', 'std_norm']
 
@@ -81,20 +80,22 @@ for w_id, w in enumerate(weights):
         for cq_id, cq in enumerate(curve_quants):
             for int_id, itg in enumerate(integrators):
                 for br_id, br in enumerate(base_regressors):
+                    print('cq:%i int:%i reg:%i' % (cq_id, int_id, br_id))
+                    
                     for t_id, t in enumerate(transforms):
-                        
-                        dpl = DPL(
-                            base_clf=clone(br),
-                            curve_quants=cq,
-                            max_iter=n_iter,
-                            monotonic=False,
-                            transform=t,
-                            integrator=clone(itg)
-                        )
-                        
+                       
                         # K-fold
                         rskf = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=rs)
                         for fold, (train, test) in enumerate(rskf.split(X, y)):
+                            dpl = DPL(
+                                base_clf=clone(br),
+                                curve_quants=cq,
+                                max_iter=n_iter,
+                                monotonic=False,
+                                transform=t,
+                                integrator=clone(itg)
+                            )
+                        
                             pred = dpl.fit(X[train], y[train]).predict(X[test])
                             res[w_id, rs_id, cq_id, int_id,br_id, t_id, fold] = balanced_accuracy_score(y[test], pred)
                             
