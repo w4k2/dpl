@@ -120,7 +120,7 @@ else:
     
     #Plot error
     res = np.load('results/res_density_2d.npy')
-    print(res.shape) # datasets x estiators x iters x (stat, p, mse, mae)
+    print(res.shape) # datasets x estimators x iters x (stat, p, mse, mae)
         
     labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
     cols = ['b','b','b','r','r','r','r']
@@ -162,3 +162,32 @@ else:
                 
     plt.tight_layout()
     plt.savefig('figures/imgs_2d.png')
+    
+    
+    #Plot learning
+    labels = ['DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+    cols = ['gray', 'tomato', 'forestgreen', 'cornflowerblue']
+
+    res = np.load('results/res_density_2d.npy')[:,-4:] #datasets, estimators, iters, (mse, mae)
+    res = res[:,:,:,[0,2,3]]
+    print(res.shape)
+    
+    fig, ax = plt.subplots(8,3,figsize=(14,14), sharex=True)
+    
+    for d_id, d_name in enumerate(datasets.keys()):
+        for m_id, m in enumerate(['Statistic', 'MSE', 'MAE']):
+            for e_id, e in enumerate(labels):
+                ax[d_id, m_id].plot(res[d_id, e_id, :, m_id], label=e, color=cols[e_id], alpha=0.5)
+            
+            if m_id==0:
+                ax[d_id, m_id].set_ylabel(d_name)
+            if d_id==0:
+                ax[d_id, m_id].set_title(m)
+            
+            ax[d_id, m_id].grid(ls=':')
+                
+    ax[0,0].legend(ncol=2, frameon=False)
+                
+    plt.tight_layout()
+    plt.savefig('figures/learning_2d.png')
+    
