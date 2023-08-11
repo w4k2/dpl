@@ -151,7 +151,7 @@ else:
     res = np.load('results/res_density_1d_v.npy')
     print(res.shape)
     
-    fig, ax = plt.subplots(8,8,figsize=(20,20))
+    fig, ax = plt.subplots(8,8,figsize=(20,20), sharex=True, sharey=True)
     
     for d_id, d_name in enumerate(datasets.keys()):
         for est_id, est in enumerate(labels):
