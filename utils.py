@@ -66,3 +66,8 @@ def snakeway(n_samples=1000, factor=3,
     X += translation
     
     return X.reshape(-1,1), y, (norms, signs)
+
+def norm_0_1(data):
+    data -=np.nanmin(data)
+    data /=np.nanmax(data)
+    return data

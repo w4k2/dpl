@@ -83,9 +83,10 @@ class DPL(ClassifierMixin, BaseEstimator):
         # Evidence update
         mask = np.random.uniform(size=self.n_samples) < self.batch_size # losowo wybrany batch size obiektów
         
-        # print(representation[mask])
         self.clf.partial_fit(X[mask], representation[mask]) # Uczymy regresor reprezentacji (czyli sqrt z odległości do najbliższych)
         self.epoch += 1
+        
+        return self
     
     def decfunc(self, X):
         return self.clf.predict(X) # odpowiedzią jest estymowana odległość
@@ -102,6 +103,13 @@ class DPL(ClassifierMixin, BaseEstimator):
                
         dist_std = np.std(dist, axis=1)
         dist_hmean = hmean(dist, axis=1)
+        dist_std[dist_std==0]=0.001
+        dist_hmean[dist_hmean==0]=0.001
         
         fn = 1/(dist_hmean * dist_std)
+        
+        #Anomalies?
+        fn[np.isnan(fn)]=0 
+        fn[np.isinf(fn)]=np.max(fn[np.isinf(fn)==False])
+
         return fn
