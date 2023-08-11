@@ -23,7 +23,10 @@ repeats_data = 3
 random_states = np.random.randint(100, 1000, repeats_data)
 
 datasets = os.listdir('datasets')
-datasets.remove('.DS_Store')
+try:
+    datasets.remove('.DS_Store')
+except:
+    pass
 
 
 # Method configuration
