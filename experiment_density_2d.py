@@ -7,6 +7,7 @@ from methods import DPL
 from sklearn.base import clone
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.neighbors import KernelDensity
+from scipy.ndimage import gaussian_filter1d
 
 def norm_0_1(data):
     data -=np.nanmin(data)
@@ -177,8 +178,8 @@ else:
     for d_id, d_name in enumerate(datasets.keys()):
         for m_id, m in enumerate(['Statistic', 'MSE', 'MAE']):
             for e_id, e in enumerate(labels):
-                ax[d_id, m_id].plot(res[d_id, e_id, :, m_id], label=e, color=cols[e_id], alpha=0.5)
-            
+                temp = gaussian_filter1d(res[d_id, e_id, :, m_id], 3)
+                ax[d_id, m_id].plot(temp, label=e, color=cols[e_id], alpha=0.75)            
             if m_id==0:
                 ax[d_id, m_id].set_ylabel(d_name)
             if d_id==0:

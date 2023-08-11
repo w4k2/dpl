@@ -105,12 +105,3 @@ class DPL(ClassifierMixin, BaseEstimator):
         
         fn = 1/(dist_hmean * dist_std)
         return fn
-        
-        # print(fn)
-        # print(np.sum(np.isnan(fn)))
-        # print(np.sum(np.isinf(fn)))
-        
-        # plt.title(self.epoch)
-        # plt.scatter(*X.T, c=fn, cmap='coolwarm')
-        # plt.savefig('foo.png')
-        
