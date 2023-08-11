@@ -75,6 +75,7 @@ for f_id, f in enumerate(factors):
         for cq_id, cq in enumerate(curve_quants):
             for int_id, itg in enumerate(integrators):
                 for br_id, br in enumerate(base_regressors):
+                    print('cq:%i int:%i reg:%i' % (cq_id, int_id, br_id))
                     for t_id, t in enumerate(transforms):
                         
                         dpl = DPL(
@@ -101,6 +102,8 @@ for f_id, f in enumerate(factors):
                             if i==n_iter-1:
                                 res_pred[f_id, n_c_id, cq_id, int_id, br_id, 0] = n_spdf
                                 res_pred[f_id, n_c_id, cq_id, int_id, br_id, t_id+1] = n_pred
+                
+                    
                                 
         np.save('results/E1_est.npy', res)            
         np.save('results/E1_est_v.npy', res_pred)
