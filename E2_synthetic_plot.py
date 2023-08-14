@@ -4,15 +4,6 @@ Klasyfikacja danych syntetycznych
 """
 
 import numpy as np
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.neural_network import MLPClassifier, MLPRegressor
-from methods import DPL
-from sklearn.metrics import balanced_accuracy_score
-from sklearn.datasets import make_circles, make_classification, make_moons
-from sklearn.naive_bayes import GaussianNB
-from tqdm import tqdm
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
 from utils import synthetic_dataset_names
 import matplotlib.pyplot as plt
 
