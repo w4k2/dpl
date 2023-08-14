@@ -48,15 +48,15 @@ plt.savefig('figures/E3_1d.png')
 ###
 
 res = np.load('results/E3_1d.npy')
-res = np.mean(res, axis=0)[:,:,-1,] # last iteration
+res = np.mean(res, axis=0)[:,:,-1] # last iteration
+res = res[:,:,1:] #skip Statistic
 
 
 # Plot imgs
 labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
 
-fig, ax = plt.subplots(1,3,figsize=(10,7), sharex=True, sharey=True)
-
-for m_id, m in enumerate(['Statistic', 'MSE', 'MAE']):
+fig, ax = plt.subplots(1,2,figsize=(7,8), sharex=True, sharey=True)
+for m_id, m in enumerate(['MSE', 'MAE']):
     ax[m_id].imshow(res[:,:,m_id], cmap='coolwarm')
     
     ax[m_id].set_title(m)
