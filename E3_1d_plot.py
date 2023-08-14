@@ -13,6 +13,8 @@ for n_c in n_centroids:
 
 print(dataset_names, len(dataset_names))
 
+pred_space = np.linspace(-5,5,1000).reshape(-1, 1)
+
 ###
 
 res_pred = np.load('results/E3_1d_v.npy')
@@ -32,7 +34,7 @@ for d_id, d in enumerate(dataset_names):
     for est_id, est in enumerate(labels):
         if est_id in [2,1,4,6,7]:
             continue
-        ax[d_id].plot(res_pred[d_id, est_id], label=est, ls=ls[est_id], c=cols[est_id], alpha=0.7)
+        ax[d_id].plot(pred_space, res_pred[d_id, est_id], label=est, ls=ls[est_id], c=cols[est_id], alpha=0.7)
     
     ax[d_id].set_title(d)
     ax[d_id].grid(ls=':')
