@@ -26,7 +26,7 @@ for n_c in n_centroids:
 # Method configuration
 n_methods = 7
 iterations = 256
-repeats = 1
+repeats = 10
 
 # Experiment configuration
 pred_space = np.linspace(-5,5,100).reshape(-1, 1)
