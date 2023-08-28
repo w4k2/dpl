@@ -33,6 +33,7 @@ res_mean = np.mean(res, axis=(1,-1))
 print(res_mean.shape)
 
 # res_mean[:, 0, 0, 3, 0] = 0 # integrator 0, regressor 3
+# res_mean[:, 0, 0, 0, 3] = 0 # cq 0, transform 3
 
 for w_id, (_, w) in enumerate(weights):
     
@@ -68,15 +69,15 @@ for w_id, (_, w) in enumerate(weights):
             
             if itg_id==0:
                 ax[itg_id, r_id].set_title('regressor: %s' % (r))
-                ax[-1, r_id].set_xlabel('curve quants')
+                ax[-1, r_id].set_xlabel('transform')
 
             if r_id==0:
-                ax[itg_id, r_id].set_ylabel('integrator: %s \n transform' % (itg))
+                ax[itg_id, r_id].set_ylabel('integrator: %s \n curve quants' % (itg))
                 
             ax[itg_id, r_id].imshow(res_mean[w_id, :, itg_id, r_id, :], vmin=0.5, vmax=1, cmap='coolwarm')
             
-            ax[itg_id, r_id].set_xticks(np.arange(4), curve_quants, rotation=90)
-            ax[itg_id, r_id].set_yticks(np.arange(4), transforms)
+            ax[itg_id, r_id].set_xticks(np.arange(4), transforms, rotation=90)
+            ax[itg_id, r_id].set_yticks(np.arange(4), curve_quants)
             
             for _a, __a in enumerate(curve_quants):
                 for _b, __b in enumerate(transforms):
