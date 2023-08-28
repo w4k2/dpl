@@ -44,19 +44,24 @@ plt.savefig('figures/E3_2d.png')
 
 res = np.load('results/E3_2d.npy')
 res = np.mean(res, axis=0)[:,:,-1] # last iteration
-res = res[:,:,1:] #skip Statistic
+res = res[:,:,1] #just MSE
 
 # Plot imgs
 labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
 
-fig, ax = plt.subplots(1,2,figsize=(7,8), sharex=True, sharey=True)
-for m_id, m in enumerate(['MSE', 'MAE']):
-    ax[m_id].imshow(res[:,:,m_id], cmap='coolwarm')
-    
-    ax[m_id].set_title(m)
-    ax[m_id].grid(ls=':')
-    ax[m_id].set_xticks(np.arange(len(labels)), labels, rotation=90)
-    ax[m_id].set_yticks(np.arange(len(dataset_names)), dataset_names)
-            
+
+fig, ax = plt.subplots(1,1,figsize=(4,8), sharex=True, sharey=True)
+ax.imshow(res, cmap='coolwarm')
+ax.set_title('MSE')
+# ax.grid(ls=':')
+ax.set_xticks(np.arange(len(labels)), labels, rotation=90)
+ax.set_yticks(np.arange(len(dataset_names)), dataset_names)
+        
+for _a, __a in enumerate(dataset_names):
+    for _b, __b in enumerate(labels):
+        ax.text(_b, _a, "%.3f" % (
+            res[_a, _b]
+            ) , va='center', ha='center', c='white', fontsize=8)
+        
 plt.tight_layout()
 plt.savefig('figures/E3_2d_err.png')
