@@ -68,7 +68,7 @@ print(res_pred.shape) # factors x centroids x cq x reg x transforms
 cq_id=2
 cols=plt.cm.Reds(np.linspace(0.2,1,len(base_regressors)))
 
-fig, ax = plt.subplots(5, 4, figsize=(12,12), sharex=True, sharey=True)
+fig, ax = plt.subplots(5, 4, figsize=(13,13), sharex=True, sharey=True)
 
 for cent_id, cent in enumerate(n_centroids):
     for tr_id, tr in enumerate(transforms):
@@ -80,13 +80,13 @@ for cent_id, cent in enumerate(n_centroids):
         
         # for cq_id, cq in enumerate(curve_quants):
         for r_id, r in enumerate(base_regressors):
-            ax[cent_id, tr_id].plot(res_pred[cent_id, cq_id, r_id, tr_id], label='%s' % (r), alpha=0.5, c=cols[r_id])
+            ax[cent_id, tr_id].plot(test_space, res_pred[cent_id, cq_id, r_id, tr_id], label='%s' % (r), alpha=0.5, c=cols[r_id])
         
         ax[cent_id, tr_id].grid(ls=':')
-        ax[cent_id, tr_id].plot(np.mean(originals[:, cent_id], axis=0), color='blue', ls=':')
+        ax[cent_id, tr_id].plot(test_space, np.mean(originals[:, cent_id], axis=0), color='blue', ls=':')
 
 
-plt.legend(ncol=1, frameon=False)
+plt.legend(loc='lower center', bbox_to_anchor=(-1.4, -0.6), ncol=3, frameon=False)
 plt.tight_layout()
 plt.savefig('figures/E1_est.png')
                 
