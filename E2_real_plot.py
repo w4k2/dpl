@@ -30,13 +30,15 @@ res = res[order]
 dataset_names = np.array(dataset_names)[order]
 
 
-fig, ax = plt.subplots(1,1,figsize=(25,7))
+fig, ax = plt.subplots(1,1,figsize=(15,5))
 
 for method_id, method in enumerate(method_names):
     ax.scatter(np.arange(len(dataset_names)), res[:, method_id], marker=markers[method_id], c=cols[method_id], label=method, alpha=0.5)
 
 ax.set_xticks(np.arange(len(dataset_names)), dataset_names, rotation=90)
-ax.set_xlim(-1,65)
+ax.set_xlim(-1,68)
+ax.set_ylim(0.3, 1.01)
+ax.set_ylabel('BAC')
 ax.grid(ls=':')
 ax.legend()
 

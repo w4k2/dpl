@@ -23,10 +23,10 @@ res_pred = np.mean(res_pred, axis=0)
 # Plot imgs
 labels = ['true', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
 
-fig, ax = plt.subplots(4,5,figsize=(15,12), sharex=True, sharey=True)
+fig, ax = plt.subplots(4,5,figsize=(12,9), sharex=True, sharey=True)
 
 for d_plot_id, dataset_id in enumerate([1,5,9,13]):
-    for plot_id, est_id in enumerate([0,1,4,5,6]):
+    for plot_id, est_id in enumerate([0,3,4,5,6]):
         ax[d_plot_id, plot_id].scatter(*pred_mesh.T, c=res_pred[dataset_id, est_id], cmap='coolwarm')
     
         if d_plot_id==0:

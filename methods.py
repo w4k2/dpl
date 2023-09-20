@@ -86,6 +86,9 @@ class DPL(ClassifierMixin, BaseEstimator):
         self.clf.partial_fit(X[mask], representation[mask]) # Uczymy regresor reprezentacji (czyli sqrt z odległości do najbliższych)
         self.epoch += 1
         
+        if self.monotonic==False:
+            self.integrator.fit(self.clf.predict(X), y)
+        
         return self
     
     def decfunc(self, X):
@@ -95,7 +98,16 @@ class DPL(ClassifierMixin, BaseEstimator):
         return self.integrator.predict(self.decfunc(X))
         
     def predict_proba(self, X):
-        return self.integrator.predict_proba(self.decfunc(X))
+        dist = self.decfunc(X)
+        return self.integrator.predict_proba(dist)
+    
+    def _predict_proba(self, X):
+        dist = self.decfunc(X)
+        dist_std = np.std(dist, axis=1).reshape(-1,1)
+
+        pp =  self.integrator.predict_proba(dist)
+        return pp/dist_std
+        
     
     def score_samples(self, X):
         dist = -self.decfunc(X) # estimates the distance to curve_quants nearest neighbors
