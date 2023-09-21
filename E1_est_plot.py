@@ -15,21 +15,21 @@ base_regressors = [
     'MLP10-10-10',
     'MLP100-100-100'
 ]
-transforms = ['none', 'sqrt', 'log', 'std_norm']
+transforms = ['none', 'sqrt', 'log', 'std']
 test_space = np.linspace(-5,5,1000).reshape(-1, 1)
 
-# res = np.load('results/E1_est.npy')
-# res = res[:, :, :,0, :, :, :, 1] #get MSE only + rm integrator axis
+res = np.load('results/E1_est.npy')
+res = res[:, :, :,0, :, :, :, 1] #get MSE only + rm integrator axis
 
-# print(res.shape) # factors x centroids x cq  x reg x transforms x iters
+print(res.shape) # factors x centroids x cq  x reg x transforms x iters
 
-# res = res[..., -1] # last iteration
-# print(res.shape) # cq x integrators x reg x transforms
+res = res[..., -1] # last iteration
+print(res.shape) # cq x integrators x reg x transforms
 
 # for factor_id, factor in enumerate(factors):
 
-#     fig, ax = plt.subplots(5,6,figsize=(12,12), sharex=True, sharey=True)
-#     plt.suptitle('factor: %i' % factor)
+#     fig, ax = plt.subplots(5,6,figsize=(12,10), sharex=True, sharey=True)
+#     # plt.suptitle('factor: %i' % factor)
     
 #     for cent_id, cent in enumerate(n_centroids):
 #         for r_id, r in enumerate(base_regressors):
@@ -43,7 +43,7 @@ test_space = np.linspace(-5,5,1000).reshape(-1, 1)
                 
 #             ax[cent_id, r_id].imshow(res[factor_id, cent_id, :, r_id, :],cmap='coolwarm', vmin=0, vmax=0.5)#np.max(res[factor_id]))
             
-#             ax[cent_id, r_id].set_xticks(np.arange(4), curve_quants, rotation=90)
+#             ax[cent_id, r_id].set_xticks(np.arange(4), curve_quants)
 #             ax[cent_id, r_id].set_yticks(np.arange(4), transforms)
             
 #             for _a, __a in enumerate(curve_quants):
@@ -55,6 +55,41 @@ test_space = np.linspace(-5,5,1000).reshape(-1, 1)
 #         plt.tight_layout()
 #         plt.savefig('figures/E1_est_mse_f%i.png' % factor)
         
+        
+#one row
+
+for factor_id, factor in enumerate(factors):
+
+    fig, ax = plt.subplots(1,6,figsize=(12,3), sharex=True, sharey=True)
+    # plt.suptitle('factor: %i' % factor)
+    
+    for cent_id, cent in enumerate(n_centroids):
+        if cent!=3:
+            continue
+        
+        for r_id, r in enumerate(base_regressors):
+            
+            ax[r_id].set_title('%s' % (r))
+            ax[r_id].set_xlabel('curve quants')
+
+            if r_id==0:
+                ax[r_id].set_ylabel('%i centroids \n transform' % cent)
+                
+            ax[r_id].imshow(res[factor_id, cent_id, :, r_id, :],cmap='coolwarm', vmin=0, vmax=0.5)#np.max(res[factor_id]))
+            
+            ax[r_id].set_xticks(np.arange(4), curve_quants)
+            ax[r_id].set_yticks(np.arange(4), transforms)
+            
+            for _a, __a in enumerate(curve_quants):
+                for _b, __b in enumerate(transforms):
+                    ax[r_id].text(_b, _a, "%.3f" % (
+                        res[factor_id, cent_id, _a, r_id, _b]
+                        ) , va='center', ha='center', c='white', fontsize=8)
+            
+        plt.tight_layout()
+        plt.savefig('figures/E1_est_mse_f%i_2.png' % factor)
+                
+
 # # preds
 # res_pred = np.load('results/E1_est_v.npy')
 # res_pred = res_pred[:, :, :,0] # rm integrator axis
@@ -104,25 +139,25 @@ print(res.shape) # factors x centroids x cq  x reg x transforms x iters
 for reg_id, reg in enumerate(base_regressors):
     for tr_id, tr in enumerate(transforms):
         
-        fig, ax = plt.subplots(len(factors), len(n_centroids), figsize=(12,10), sharex=True, sharey=True)
-        plt.suptitle('reg: %s | t: %s' % (reg, tr))
+        fig, ax = plt.subplots(1, len(n_centroids), figsize=(13,4), sharex=True, sharey=True)
+        plt.suptitle('reg: %s | T: %s' % (reg, tr))
         
         for f_id, f in enumerate(factors):
+            if f!=3:
+                continue
+            
             for c_id, c in enumerate(n_centroids):
                 
-                if f_id==0:
-                    ax[f_id, c_id].set_title('centroids: %s' % c)
-                    ax[-1, c_id].set_xlabel('iteration')
+                ax[c_id].set_title('centroids: %s' % c)
+                ax[c_id].set_xlabel('iteration')
                 if c_id==0:
-                    ax[f_id, c_id].set_ylabel('factor: %s \n MSE' % f)
+                    ax[c_id].set_ylabel('factor: %s \n MSE' % f)
                 
-                
-
                 for cq_id, cq in enumerate(curve_quants):
                     temp = gaussian_filter1d(res[f_id, c_id, cq_id, reg_id, tr_id], s)
-                    ax[f_id, c_id].plot(temp, label='cq: %i' % cq, c=cols[cq_id])
+                    ax[c_id].plot(temp, label='q: %i' % cq, c=cols[cq_id])
             
-                ax[f_id, c_id].grid(ls=':')
+                ax[c_id].grid(ls=':')
                 
         
         plt.legend()      

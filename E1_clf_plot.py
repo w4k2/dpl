@@ -61,33 +61,63 @@ for w_id, (_, w) in enumerate(weights):
     #                     res_mean[w_id, cq_id, _a, _b, t_id]
     #                     ) , va='center', ha='center', c='white', fontsize=11)
         
-    fig, ax = plt.subplots(5,5,figsize=(12,12), sharex=True, sharey=True)
-    plt.suptitle('weight: %0.2f' % w)    
+    # fig, ax = plt.subplots(5,5,figsize=(12,12), sharex=True, sharey=True)
+    # # plt.suptitle('weight: %0.2f' % w)
+
+    # for itg_id, itg in enumerate(integrators):
+    #     for r_id, r in enumerate(base_regressors):
+            
+    #         if itg_id==0:
+    #             ax[itg_id, r_id].set_title('regressor: %s' % (r))
+    #             ax[-1, r_id].set_xlabel('curve quants')
+
+    #         if r_id==0:
+    #             ax[itg_id, r_id].set_ylabel('integrator: %s \n transform' % (itg))
+                
+    #         ax[itg_id, r_id].imshow(res_mean[w_id, :, itg_id, r_id, :].T, vmin=0.5, vmax=1, cmap='coolwarm')
+            
+    #         ax[itg_id, r_id].set_xticks(np.arange(4), curve_quants)
+    #         ax[itg_id, r_id].set_yticks(np.arange(4), transforms)
+            
+    #         for _a, __a in enumerate(curve_quants):
+    #             for _b, __b in enumerate(transforms):
+    #                 ax[itg_id, r_id].text(_b, _a, "%.3f" % (
+    #                     res_mean[w_id, _a, itg_id, r_id, _b]
+    #                     ) , va='center', ha='center', c='white', fontsize=8)
+            
+    # plt.tight_layout()
+    # plt.savefig('figures/E1_clf_w%i_2.png' % w_id)
+                            
+
+# just one row
+
+    fig, ax = plt.subplots(1,5,figsize=(12,3), sharex=True, sharey=True)
+    # plt.suptitle('weight: %0.2f' % w)
 
     for itg_id, itg in enumerate(integrators):
+        if itg!='MLP100':
+            continue
+
         for r_id, r in enumerate(base_regressors):
             
-            if itg_id==0:
-                ax[itg_id, r_id].set_title('regressor: %s' % (r))
-                ax[-1, r_id].set_xlabel('transform')
+            ax[r_id].set_title('regressor: %s' % (r))
+            ax[r_id].set_xlabel('curve quants')
 
             if r_id==0:
-                ax[itg_id, r_id].set_ylabel('integrator: %s \n curve quants' % (itg))
+                ax[r_id].set_ylabel('integrator: %s \n transform' % itg)
                 
-            ax[itg_id, r_id].imshow(res_mean[w_id, :, itg_id, r_id, :], vmin=0.5, vmax=1, cmap='coolwarm')
+            ax[r_id].imshow(res_mean[w_id, :, itg_id, r_id, :].T, vmin=0.5, vmax=1, cmap='coolwarm')
             
-            ax[itg_id, r_id].set_xticks(np.arange(4), transforms, rotation=90)
-            ax[itg_id, r_id].set_yticks(np.arange(4), curve_quants)
+            ax[r_id].set_xticks(np.arange(4), curve_quants)
+            ax[r_id].set_yticks(np.arange(4), transforms)
             
-            for _a, __a in enumerate(curve_quants):
-                for _b, __b in enumerate(transforms):
-                    ax[itg_id, r_id].text(_b, _a, "%.3f" % (
+            for _a, __a in enumerate(transforms):
+                for _b, __b in enumerate(curve_quants):
+                    ax[r_id].text(_a, _b, "%.3f" % (
                         res_mean[w_id, _a, itg_id, r_id, _b]
                         ) , va='center', ha='center', c='white', fontsize=8)
             
     plt.tight_layout()
-    plt.savefig('figures/E1_clf_w%i_2.png' % w_id)
-                            
-                            
+    plt.savefig('figures/E1_clf_w%i_3.png' % w_id)
                 
 

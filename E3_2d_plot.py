@@ -51,8 +51,8 @@ labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std
 
 
 fig, ax = plt.subplots(1,1,figsize=(4,8), sharex=True, sharey=True)
-ax.imshow(res, cmap='coolwarm')
-ax.set_title('MSE')
+ax.imshow(res, cmap='coolwarm',vmin=0,vmax=0.3)
+ax.set_title('2D')
 # ax.grid(ls=':')
 ax.set_xticks(np.arange(len(labels)), labels, rotation=90)
 ax.set_yticks(np.arange(len(dataset_names)), dataset_names)
