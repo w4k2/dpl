@@ -1,4 +1,4 @@
-from utils import snakeway, zeto
+from utils import snakeway, zeto, ns2pdf, norm_0_1
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -14,11 +14,16 @@ for n_c_id, n_c in enumerate(n_centroids):
     for f_id, f in enumerate(factors):
         X, y, ns = snakeway(n_samples=n_samples, n_centroids=n_c, factor=f)
         
+        pred_space = np.linspace(-3,3,1000).reshape(-1, 1)
+        spdf = ns2pdf(pred_space, (ns[0], np.ones_like(ns[1]))).flatten()
+        n_spdf = norm_0_1(spdf)
+        
         if n_c==3:
             ax[n_c_id, f_id].set_title('factor = %i' % f, fontsize=12)
         if f==1:
             ax[n_c_id, f_id].set_ylabel('%i centroids' % n_c, fontsize=12)
         ax[n_c_id, f_id].scatter(X, np.random.rand(len(y)), c=y, cmap='coolwarm', alpha=0.23)
+        ax[n_c_id, f_id].plot(pred_space, n_spdf, color='black', ls=':')
         ax[n_c_id, f_id].spines['top'].set_visible(False)
         ax[n_c_id, f_id].spines['right'].set_visible(False)
         ax[n_c_id, f_id].set_yticks([])
