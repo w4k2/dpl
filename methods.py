@@ -101,14 +101,6 @@ class DPL(ClassifierMixin, BaseEstimator):
         dist = self.decfunc(X)
         return self.integrator.predict_proba(dist)
     
-    def _predict_proba(self, X):
-        dist = self.decfunc(X)
-        dist_std = np.std(dist, axis=1).reshape(-1,1)
-
-        pp =  self.integrator.predict_proba(dist)
-        return pp/dist_std
-        
-    
     def score_samples(self, X):
         dist = -self.decfunc(X) # estimates the distance to curve_quants nearest neighbors
         dist[dist<0]=0.001
