@@ -21,7 +21,7 @@ res_pred = np.load('results/E3_2d_v.npy')
 res_pred = np.mean(res_pred, axis=0)
 
 # Plot imgs
-labels = ['true', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+labels = ['source distribution', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
 
 fig, ax = plt.subplots(4,5,figsize=(12,9), sharex=True, sharey=True)
 

@@ -88,6 +88,7 @@ for factor_id, factor in enumerate(factors):
             
         plt.tight_layout()
         plt.savefig('figures/E1_est_mse_f%i_2.png' % factor)
+        plt.savefig('figures/E1_est_mse_f%i_2.eps' % factor)
                 
 
 # # preds
@@ -151,16 +152,19 @@ for reg_id, reg in enumerate(base_regressors):
                 ax[c_id].set_title('centroids: %s' % c)
                 ax[c_id].set_xlabel('iteration')
                 if c_id==0:
-                    ax[c_id].set_ylabel('factor: %s \n MSE' % f)
+                    ax[c_id].set_ylabel('factor: %s \n Mean Squared Error' % f)
                 
                 for cq_id, cq in enumerate(curve_quants):
                     temp = gaussian_filter1d(res[f_id, c_id, cq_id, reg_id, tr_id], s)
                     ax[c_id].plot(temp, label='q: %i' % cq, c=cols[cq_id])
             
                 ax[c_id].grid(ls=':')
+                ax[c_id].spines['top'].set_visible(False)
+                ax[c_id].spines['right'].set_visible(False)
                 
         
         plt.legend()      
         plt.tight_layout()
         plt.savefig('figures/E1_L_r%s_t%s.png' % (reg_id, tr_id))
+        plt.savefig('figures/E1_L_r%s_t%s.eps' % (reg_id, tr_id))
         

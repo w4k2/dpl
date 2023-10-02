@@ -115,9 +115,10 @@ for w_id, (_, w) in enumerate(weights):
                 for _b, __b in enumerate(curve_quants):
                     ax[r_id].text(_a, _b, "%.3f" % (
                         res_mean[w_id, _a, itg_id, r_id, _b]
-                        ) , va='center', ha='center', c='white', fontsize=8)
+                        ) , va='center', ha='center', c='black', fontsize=8)
             
     plt.tight_layout()
     plt.savefig('figures/E1_clf_w%i_3.png' % w_id)
+    plt.savefig('figures/E1_clf_w%i_3.eps' % w_id)
                 
 
