@@ -15,13 +15,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 import os
 
-from utils import snakeway, zeto
-
 # Data configuration
-n_samples = 1000
-repeats_data = 3
-random_states = np.random.randint(100, 1000, repeats_data)
-
 datasets = os.listdir('datasets')
 try:
     datasets.remove('.DS_Store')
