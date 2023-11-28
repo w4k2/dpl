@@ -1,3 +1,9 @@
+"""
+Density estimation - 1D 
+
+Plot
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 

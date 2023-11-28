@@ -1,7 +1,7 @@
 """
-Hiperparametry / konfiguracja
+Hyperparameters / configuration
 
-Dane syntetyczne z snakeway
+Syntehtic snakeway - density estimation
 
 """
 

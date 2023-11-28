@@ -1,7 +1,7 @@
 """
-Hiperparametry / konfiguracja
+Hyperparameters / configuration
 
-Dane syntetyczne z make_classification
+synthetic data from make_classification -- classification
 
 """
 

@@ -1,3 +1,9 @@
+"""
+Hyperparameters / configuration
+
+synthetic data from make_classification -- classification -- plot
+
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

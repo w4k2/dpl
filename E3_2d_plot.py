@@ -1,3 +1,8 @@
+"""
+Density estimation - 2D 
+
+Plot
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

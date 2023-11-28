@@ -1,3 +1,10 @@
+"""
+Hyperparameters / configuration
+
+Syntehtic snakeway - density estimation -- plot
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d

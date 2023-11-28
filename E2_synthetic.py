@@ -1,5 +1,5 @@
 """
-Klasyfikacja danych syntetycznych
+Classification of synthetic datasets
 
 """
 

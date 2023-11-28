@@ -1,5 +1,5 @@
 """
-Klasyfikacja danych rzeczywistych
+Classicifation of real-world data 
 
 """
 
@@ -8,7 +8,6 @@ from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from methods import DPL
 from sklearn.metrics import balanced_accuracy_score
-from sklearn.datasets import make_circles, make_classification, make_moons
 from sklearn.naive_bayes import GaussianNB
 from tqdm import tqdm
 from sklearn.neighbors import KNeighborsClassifier
