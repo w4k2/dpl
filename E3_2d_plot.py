@@ -25,10 +25,13 @@ pred_mesh = np.array(np.meshgrid(pred_space, pred_space)).reshape(2,-1).T
 res_pred = np.load('results/E3_2d_v.npy')
 res_pred = np.mean(res_pred, axis=0)
 
-# Plot imgs
-labels = ['source distribution', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+# print(res_pred.shape)
+# exit()
 
-fig, ax = plt.subplots(4,5,figsize=(12,9), sharex=True, sharey=True)
+# Plot imgs
+labels = ['source', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std']
+
+fig, ax = plt.subplots(4,5,figsize=(9,7), sharex=True, sharey=True)
 
 for d_plot_id, dataset_id in enumerate([1,5,9,13]):
     for plot_id, est_id in enumerate([0,3,4,5,6]):
@@ -41,9 +44,14 @@ for d_plot_id, dataset_id in enumerate([1,5,9,13]):
         ax[d_plot_id, plot_id].set_xlim(-5,5)
         ax[d_plot_id, plot_id].set_ylim(-5,5)
 
+
             
 plt.tight_layout()
 plt.savefig('figures/E3_2d.png')
+plt.savefig('figures/E3_2d.eps')
+plt.savefig('foo.png')
+
+exit()
 
 ###
 
@@ -52,11 +60,11 @@ res = np.mean(res, axis=0)[:,:,-1] # last iteration
 res = res[:,:,1] #just MSE
 
 # Plot imgs
-labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std_norm']
+labels = ['KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std']
 
 
-fig, ax = plt.subplots(1,1,figsize=(4,8), sharex=True, sharey=True)
-ax.imshow(res, cmap='coolwarm',vmin=0,vmax=0.3)
+fig, ax = plt.subplots(1,1,figsize=(4.5,7), sharex=True, sharey=True)
+ax.imshow(res, cmap='coolwarm',vmin=0,vmax=0.3, aspect='auto')
 ax.set_title('2D')
 # ax.grid(ls=':')
 ax.set_xticks(np.arange(len(labels)), labels, rotation=90)
@@ -66,7 +74,9 @@ for _a, __a in enumerate(dataset_names):
     for _b, __b in enumerate(labels):
         ax.text(_b, _a, "%.3f" % (
             res[_a, _b]
-            ) , va='center', ha='center', c='white', fontsize=8)
+            ) , va='center', ha='center', c='white' if res[_a, _b]<0.068 else 'black', fontsize=8)
         
 plt.tight_layout()
 plt.savefig('figures/E3_2d_err.png')
+plt.savefig('foo.png')
+plt.savefig('figures/E3_2d_err.eps')

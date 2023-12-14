@@ -139,7 +139,7 @@ for factor_id, factor in enumerate(factors):
 res = np.load('results/E1_est.npy')
 res = res[:, :, :,0, :, :, :, 1] #get MSE only + rm integrator axis
 
-cols=plt.cm.jet(np.linspace(0,0.5,4))
+cols=['tomato', 'forestgreen', 'cornflowerblue', 'orange']
 s=3
 
 print(res.shape) # factors x centroids x cq  x reg x transforms x iters
@@ -147,7 +147,7 @@ print(res.shape) # factors x centroids x cq  x reg x transforms x iters
 for reg_id, reg in enumerate(base_regressors):
     for tr_id, tr in enumerate(transforms):
         
-        fig, ax = plt.subplots(1, len(n_centroids), figsize=(13,4), sharex=True, sharey=True)
+        fig, ax = plt.subplots(1, len(n_centroids), figsize=(10,3), sharex=True, sharey=True)
         plt.suptitle('reg: %s | T: %s' % (reg, tr))
         
         for f_id, f in enumerate(factors):
@@ -170,7 +170,7 @@ for reg_id, reg in enumerate(base_regressors):
                 ax[c_id].spines['right'].set_visible(False)
                 
         
-        plt.legend()      
+        plt.legend(frameon=False)      
         plt.tight_layout()
         plt.savefig('figures/E1_L_r%s_t%s.png' % (reg_id, tr_id))
         plt.savefig('figures/E1_L_r%s_t%s.eps' % (reg_id, tr_id))

@@ -22,15 +22,21 @@ for n_c_id, n_c in enumerate(n_centroids):
             ax[n_c_id, f_id].set_title('factor = %i' % f, fontsize=12)
         if f==1:
             ax[n_c_id, f_id].set_ylabel('%i centroids' % n_c, fontsize=12)
-        ax[n_c_id, f_id].scatter(X, np.random.rand(len(y)), c=y, cmap='coolwarm', alpha=0.23)
+        ax[n_c_id, f_id].scatter(X, np.random.rand(len(y)), c=y, cmap='coolwarm', s = 10)
         ax[n_c_id, f_id].plot(pred_space, n_spdf, color='black', ls=':')
         ax[n_c_id, f_id].spines['top'].set_visible(False)
         ax[n_c_id, f_id].spines['right'].set_visible(False)
         ax[n_c_id, f_id].set_yticks([])
+        ax[n_c_id, f_id].set_xticks(np.linspace(-3,3,7))
+        ax[n_c_id, f_id].grid(ls=':')
+        ax[n_c_id, f_id].set_xlim(-3,3)
+        
+
 
         
 plt.tight_layout()
 plt.savefig('snake.png')
+plt.savefig('figures/snake.eps')
 
 
 fig, ax = plt.subplots(3,3,figsize=(8,8), sharex=True, sharey=True)
@@ -44,10 +50,14 @@ for n_c_id, n_c in enumerate(n_centroids):
             ax[n_c_id, f_id].set_title('factor = %i' % f, fontsize=12)
         if f==1:
             ax[n_c_id, f_id].set_ylabel('%i centroids' % n_c, fontsize=12)
-        ax[n_c_id, f_id].scatter(X[:,0], X[:,1], c=y, cmap='coolwarm', alpha=0.23)
+        ax[n_c_id, f_id].scatter(X[:,0], X[:,1], c=y, cmap='coolwarm', s=10)
         ax[n_c_id, f_id].spines['top'].set_visible(False)
         ax[n_c_id, f_id].spines['right'].set_visible(False)
+        ax[n_c_id, f_id].set_xticks(np.linspace(-3,3,7))
+        ax[n_c_id, f_id].set_yticks(np.linspace(-3,3,7))
+        ax[n_c_id, f_id].grid(ls=':')
 
         
 plt.tight_layout()
 plt.savefig('zeto.png')
+plt.savefig('figures/zeto.eps')
