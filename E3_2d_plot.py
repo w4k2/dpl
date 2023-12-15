@@ -31,18 +31,32 @@ res_pred = np.mean(res_pred, axis=0)
 # Plot imgs
 labels = ['source', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std']
 
-fig, ax = plt.subplots(4,5,figsize=(9,7), sharex=True, sharey=True)
+fig, ax = plt.subplots(4,5,figsize=(9,7))#, sharex=True, sharey=True)
 
 for d_plot_id, dataset_id in enumerate([1,5,9,13]):
     for plot_id, est_id in enumerate([0,3,4,5,6]):
-        ax[d_plot_id, plot_id].scatter(*pred_mesh.T, c=res_pred[dataset_id, est_id], cmap='coolwarm')
+        
+        print(pred_mesh.shape)
+        print(res_pred[dataset_id, est_id].shape)
+        
+        q = np.sqrt(pred_mesh.shape[0]).astype(int)
+        img = res_pred[dataset_id, est_id].reshape(q,q)
+        print(img.shape)
+        
+        #ax[d_plot_id, plot_id].scatter(*pred_mesh.T, c=res_pred[dataset_id, est_id], cmap='coolwarm')
+        
+        ax[d_plot_id, plot_id].imshow(img, cmap='coolwarm')
     
         if d_plot_id==0:
             ax[d_plot_id, plot_id].set_title(labels[est_id])
         if plot_id ==0:
             ax[d_plot_id, plot_id].set_ylabel(dataset_names[dataset_id])
-        ax[d_plot_id, plot_id].set_xlim(-5,5)
-        ax[d_plot_id, plot_id].set_ylim(-5,5)
+        ax[d_plot_id, plot_id].set_xlim(0,q-1)
+        ax[d_plot_id, plot_id].set_ylim(0,q-1)
+        ax[d_plot_id, plot_id].set_xticks(np.linspace(0,q-1,3),
+                                          np.linspace(-5,5,3))
+        ax[d_plot_id, plot_id].set_yticks(np.linspace(0,q-1,5),
+                                          np.linspace(-5,5,5))
 
 
             
