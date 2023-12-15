@@ -9,6 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 
+mval = .1
+
+
 factors = [1, 3, 5, 10]
 n_centroids = [2, 3, 5, 7, 9]
 
@@ -33,35 +36,37 @@ print(res.shape) # factors x centroids x cq  x reg x transforms x iters
 res = res[..., -1] # last iteration
 print(res.shape) # cq x integrators x reg x transforms
 
-# for factor_id, factor in enumerate(factors):
+for factor_id, factor in enumerate(factors):
 
-#     fig, ax = plt.subplots(5,6,figsize=(12,10), sharex=True, sharey=True)
-#     # plt.suptitle('factor: %i' % factor)
+    fig, ax = plt.subplots(5,6,figsize=(12,10), sharex=True, sharey=True)
+    # plt.suptitle('factor: %i' % factor)
     
-#     for cent_id, cent in enumerate(n_centroids):
-#         for r_id, r in enumerate(base_regressors):
+    for cent_id, cent in enumerate(n_centroids):
+        for r_id, r in enumerate(base_regressors):
             
-#             if cent_id==0:
-#                 ax[cent_id, r_id].set_title('%s' % (r))
-#                 ax[-1, r_id].set_xlabel('curve quants')
+            if cent_id==0:
+                ax[cent_id, r_id].set_title('%s' % (r))
+                ax[-1, r_id].set_xlabel('curve quants')
 
-#             if r_id==0:
-#                 ax[cent_id, r_id].set_ylabel('%i centroids \n transform' % cent)
+            if r_id==0:
+                ax[cent_id, r_id].set_ylabel('%i centroids \n transform' % cent)
                 
-#             ax[cent_id, r_id].imshow(res[factor_id, cent_id, :, r_id, :],cmap='coolwarm', vmin=0, vmax=0.5)#np.max(res[factor_id]))
+            ax[cent_id, r_id].imshow(res[factor_id, cent_id, :, r_id, :],cmap='coolwarm', vmin=0, vmax=0.5)#np.max(res[factor_id]))
             
-#             ax[cent_id, r_id].set_xticks(np.arange(4), curve_quants)
-#             ax[cent_id, r_id].set_yticks(np.arange(4), transforms)
+            ax[cent_id, r_id].set_xticks(np.arange(4), curve_quants)
+            ax[cent_id, r_id].set_yticks(np.arange(4), transforms)
             
-#             for _a, __a in enumerate(curve_quants):
-#                 for _b, __b in enumerate(transforms):
-#                     ax[cent_id, r_id].text(_b, _a, "%.3f" % (
-#                         res[factor_id, cent_id, _a, r_id, _b]
-#                         ) , va='center', ha='center', c='white', fontsize=8)
+            for _a, __a in enumerate(curve_quants):
+                for _b, __b in enumerate(transforms):
+                    val = res[factor_id, cent_id, _a, r_id, _b]
+                    ax[cent_id, r_id].text(_b, _a, "%.3f" % (
+                        val
+                        ) , va='center', ha='center', c='black' if val > mval else 'white', fontsize=8)
             
-#         plt.tight_layout()
-#         plt.savefig('figures/E1_est_mse_f%i.png' % factor)
-        
+    plt.tight_layout()
+    plt.savefig('figures/E1_est_mse_f%i.png' % factor)
+    plt.savefig('figures/E1_est_mse_f%i.eps' % factor)
+    plt.savefig('foo.png')
         
 #one row
 
@@ -96,7 +101,7 @@ for factor_id, factor in enumerate(factors):
         plt.tight_layout()
         plt.savefig('figures/E1_est_mse_f%i_2.png' % factor)
         plt.savefig('figures/E1_est_mse_f%i_2.eps' % factor)
-                
+        plt.savefig('foo.png')    
 
 # # preds
 # res_pred = np.load('results/E1_est_v.npy')
@@ -174,4 +179,7 @@ for reg_id, reg in enumerate(base_regressors):
         plt.tight_layout()
         plt.savefig('figures/E1_L_r%s_t%s.png' % (reg_id, tr_id))
         plt.savefig('figures/E1_L_r%s_t%s.eps' % (reg_id, tr_id))
+        plt.savefig('foo.png')
+        
+        plt.close()
         
