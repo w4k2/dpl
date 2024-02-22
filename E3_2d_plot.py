@@ -31,7 +31,7 @@ res_pred = np.mean(res_pred, axis=0)
 # Plot imgs
 labels = ['source', 'KDE-g', 'KDE-t', 'KDE-e', 'DPL-none', 'DPL-sqrt', 'DPL-log', 'DPL-std']
 
-fig, ax = plt.subplots(4,5,figsize=(9,7))#, sharex=True, sharey=True)
+fig, ax = plt.subplots(4,5,figsize=(9,7), sharex=True, sharey=True)
 
 for d_plot_id, dataset_id in enumerate([1,5,9,13]):
     for plot_id, est_id in enumerate([0,3,4,5,6]):
